@@ -36,12 +36,13 @@ However you should 100% check out his stuff!
 - Ice
 - Storm
 - Vitriol
-- Synaptic* 
+- Synaptic
+  * This is reskined from the original Psionic. I did this to avoid potential confusion with systems that might already reference Psionic skills or damage.  
 - Divine
 - Righteous
 
 
-   * This is reskined from the original Psionic. I did this to avoid potential confusion with systems that might already reference Psionic skills or damage. 
+   
 
 ## Installation
 
