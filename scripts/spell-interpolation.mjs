@@ -19,7 +19,7 @@ const CUSTOM_DAMAGE_TYPES = Object.freeze({
   },
   corrosive: {
     label: "Corrosive",
-    isPhysical: false
+    isPhysical: true
   },
   alkaline: {
     label: "Alkaline",
@@ -31,7 +31,7 @@ const CUSTOM_DAMAGE_TYPES = Object.freeze({
   },
   venom: {
     label: "Venom",
-    isPhysical: false
+    isPhysical: true
   },
   spiritual: {
     label: "Spiritual",
@@ -51,7 +51,7 @@ const CUSTOM_DAMAGE_TYPES = Object.freeze({
   },
   ice: {
     label: "Ice",
-    isPhysical: false
+    isPhysical: true
   },
   storm: {
     label: "Storm",
@@ -71,7 +71,7 @@ const CUSTOM_DAMAGE_TYPES = Object.freeze({
   },
   righteous: {
     label: "Righteous",
-    isPhysical: false
+    isPhysical: true
   }
 });
 
