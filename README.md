@@ -9,6 +9,7 @@ Spell Interpolation adds custom damage types and applies interpolated resistance
 This module implements a spell interpolation ruleset created by Gorilla of Destiny.
 
 Website: https://www.gorillaofdestiny.com/
+
 Video explanation: https://youtu.be/A01-46iNFgw?si=QPNCay82aSNycgtL
 
 This Foundry VTT module implementation is not affiliated with or endorsed by Gorilla of Destiny unless otherwise stated.
