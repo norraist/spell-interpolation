@@ -261,18 +261,10 @@ function getTraitFlagsForTraits(traits, damageType) {
   const type = normalizeDamageType(damageType);
   const normalizedTraits = normalizeTraitInput(traits);
 
-  if (!type) {
-    return {
-      immune: false,
-      resistant: false,
-      vulnerable: false,
-      any: false
-    };
-  }
-
-  const immune = normalizedTraits.di.has(type);
-  const resistant = normalizedTraits.dr.has(type);
-  const vulnerable = normalizedTraits.dv.has(type);
+  // All Damage also covers an interpolation's otherwise neutral component.
+  const immune = normalizedTraits.di.has("all") || normalizedTraits.di.has(type);
+  const resistant = normalizedTraits.dr.has("all") || normalizedTraits.dr.has(type);
+  const vulnerable = normalizedTraits.dv.has("all") || normalizedTraits.dv.has(type);
 
   return {
     immune,
@@ -309,7 +301,8 @@ function getInterpolatedDamageFactorForTraits(traits, damageType) {
   // Example:
   // If a creature has direct void resistance, it takes 50% void damage.
   // We do not also apply inherited cold/necrotic calculations.
-  if (directFlags.any) return getFactorFromTraitFlags(directFlags);
+  const hasSpecificTrait = Object.values(normalizeTraitInput(traits)).some(values => values.has(type));
+  if (hasSpecificTrait) return getFactorFromTraitFlags(directFlags);
 
   const interpolation = DAMAGE_TYPE_INTERPOLATIONS[type];
 
@@ -358,7 +351,9 @@ function setDamageAmount(detail, amount) {
 }
 
 function roundDamage(amount) {
-  return Math.max(0, Math.floor(Number(amount) || 0));
+  const value = Number(amount) || 0;
+  // Discard floating-point noise at whole-number boundaries, not genuine fractional damage.
+  return Math.max(0, Math.floor(value + 4 * Number.EPSILON * Math.max(1, Math.abs(value))));
 }
 
 function getDamageItemSaveMultiplier(damageItem) {
