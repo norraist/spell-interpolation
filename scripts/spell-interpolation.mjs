@@ -356,18 +356,18 @@ function roundDamage(amount) {
   return Math.max(0, Math.floor(value + 4 * Number.EPSILON * Math.max(1, Math.abs(value))));
 }
 
-function getDamageItemSaveMultiplier(damageItem) {
-  const multiplier = Number(
-    damageItem?.calcDamageOptions?.midi?.saveMultiplier
-      ?? damageItem?.saveMultiplier
-      ?? 1
-  );
-
-  if (Number.isFinite(multiplier) && multiplier >= 0) return multiplier;
-
-  return 1;
+function getDamageItemSaveMultiplier(damageItem, rawDetail) {
+  const midi = damageItem?.calcDamageOptions?.midi;
+  const onSave = Number(rawDetail?.midiSaveMultiplier ?? midi?.saveMultiplier ?? damageItem?.saveMultiplier ?? 1);
+  if (!Number.isFinite(onSave) || onSave < 0) return 1;
+  const saved = midi?.saved ?? midi?.save ?? damageItem?.saved;
+  // Midi supplies the spell's on-save rule even for targets that failed their save.
+  if (typeof saved !== "boolean") return onSave;
+  const defaultHalf = game.settings.get("midi-qol", "ConfigSettings")?.defaultSaveMult ?? 0.5;
+  if (onSave === defaultHalf && midi?.superSaver) return saved ? 0 : defaultHalf;
+  if (onSave === defaultHalf && midi?.semiSuperSaver) return saved ? 0 : 1;
+  return saved ? onSave : 1;
 }
-
 function getBaseDamageAmountForInterpolation(detail, rawDetail, damageItem) {
   const currentDamage = getDamageAmount(detail);
   const rawDamage = getDamageAmount(rawDetail);
@@ -381,7 +381,7 @@ function getBaseDamageAmountForInterpolation(detail, rawDetail, damageItem) {
   // raw 20 void, successful save multiplier 0.5, cold resistance interpolation 0.75
   // => 20 × 0.5 × 0.75 = 7.5 => 7
   if (rawDetail && rawDamage > 0) {
-    return rawDamage * getDamageItemSaveMultiplier(damageItem);
+    return rawDamage * getDamageItemSaveMultiplier(damageItem, rawDetail);
   }
 
   return currentDamage;
